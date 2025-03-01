@@ -1,382 +1,391 @@
-# **Biến tĩnh (Static Variable) và Phương thức tĩnh (Static Method)**
+# **Static trong Java - Các Loại và Đặc Điểm**
 
 [English below](#english)
 
-## **1. Biến tĩnh (Static Variable) là gì?**
-- **Biến tĩnh** là một biến được khai báo với từ khóa **`static`** trong một lớp.
-- Giá trị của biến tĩnh là **dùng chung cho tất cả các đối tượng** của lớp đó. Nó **không phụ thuộc vào từng đối tượng riêng biệt** và được lưu trong bộ nhớ **static memory** (không nằm trong bộ nhớ heap của từng đối tượng).
-- Biến tĩnh thuộc về **lớp** (Class) thay vì thuộc về **đối tượng** (Object).
-
-### **Đặc điểm của Biến tĩnh**:
-1. **Chỉ tồn tại duy nhất một bản sao (Instance)** của biến này trong bộ nhớ tĩnh dùng chung cho toàn bộ lớp.
-2. Biến tĩnh được khởi tạo ngay khi lớp được tải vào bộ nhớ và phá hủy khi chương trình kết thúc.
-3. Nó có thể được truy cập trực tiếp thông qua **tên lớp** (không cần khởi tạo đối tượng).
+Trong Java, từ khóa `static` được sử dụng để khai báo **các thành phần thuộc về lớp (class)** thay vì thuộc về các đối tượng (instance) cụ thể. Static được sử dụng để tiết kiệm bộ nhớ và dùng chung dữ liệu hoặc phương thức trên toàn bộ lớp.
 
 ---
 
-### **Ví dụ 1: Biến Tĩnh**
+## **1. Các Loại `static` trong Java**
+
+Java hỗ trợ bốn loại thành phần static:
+
+| **Loại Static**       | **Mục đích**                                                                 |
+|-----------------------|-----------------------------------------------------------------------------|
+| **Biến static**       | Lưu trữ thông tin dùng chung giữa tất cả các đối tượng của lớp.             |
+| **Phương thức static** | Dùng để thao tác dữ liệu chung hoặc gọi mà không cần tạo đối tượng.         |
+| **Khối static**        | Khối mã được thực thi một lần khi lớp được tải vào bộ nhớ JVM.              |
+| **Lớp lồng nhau static** | Một lớp bên trong có thể được khai báo là static; lớp này không phụ thuộc vào lớp cha. |
+
+---
+
+## **2. Đặc Điểm Từng Loại `static`**
+
+### **2.1. Biến static (Static Variables)**
+
+#### **Đặc điểm:**
+- Biến `static` là biến **cấp lớp** (class-level), được chia sẻ giữa tất cả các đối tượng của lớp.
+- Lưu trữ thông tin dùng chung cho mọi đối tượng (thay vì mỗi đối tượng có bản sao riêng của biến).
+- Biến static chỉ được khởi tạo một lần khi lớp được tải vào bộ nhớ.
+
+#### **Cách sử dụng:**
+- Có thể truy cập bằng:
+  - Tên lớp (`ClassName.variableName`).
+  - Hoặc thông qua một đối tượng của lớp (không được khuyến khích).
+
+#### **Ví dụ:**
 ```java
-class Counter {
-    static int count = 0; // Biến tĩnh
+public class StaticVariableExample {
+    static int count = 0; // Biến static dùng chung cho tất cả đối tượng
 
-    Counter() {
-        count++; // Tăng giá trị biến tĩnh mỗi khi tạo đối tượng
-        System.out.println("Count: " + count);
+    StaticVariableExample() {
+        count++; // Tăng giá trị mỗi khi đối tượng được tạo
     }
-}
 
-public class Main {
     public static void main(String[] args) {
-        Counter c1 = new Counter(); // Count: 1
-        Counter c2 = new Counter(); // Count: 2
-        Counter c3 = new Counter(); // Count: 3
+        StaticVariableExample obj1 = new StaticVariableExample();
+        StaticVariableExample obj2 = new StaticVariableExample();
 
-        // Truy cập biến tĩnh thông qua tên lớp
-        System.out.println("Final Count: " + Counter.count); // Output: 3
-    }
-}
-```
-
-**Giải thích**:
-- Biến tĩnh `count` dùng chung cho tất cả các đối tượng của lớp `Counter`.
-- Mỗi lần một đối tượng `Counter` được tạo, biến `count` tăng thêm 1.
-
----
-
-## **2. Phương thức tĩnh (Static Method)**
-
-**Phương thức tĩnh** là một phương thức được khai báo với từ khóa **`static`**. Phương thức này thuộc về **lớp** thay vì **đối tượng**. Điều này có nghĩa là bạn có thể gọi phương thức tĩnh mà **không cần tạo đối tượng của lớp**.
-
-### **Đặc điểm của Phương thức tĩnh**:
-1. Phương thức tĩnh có thể được gọi bằng **tên lớp**, thay vì thông qua đối tượng.
-2. Phương thức tĩnh chỉ có thể truy cập:
-   - **Biến tĩnh**.
-   - Các **phương thức tĩnh khác**.
-3. **Không thể** truy cập hoặc sửa đổi biến **non-static (biến thông thường)** của lớp hoặc gọi phương thức **non-static**.
-4. Thường được sử dụng để thực hiện các thao tác chung không dựa vào trình trạng cụ thể của đối tượng.
-
----
-
-### **Ví dụ 2: Phương thức Tĩnh**
-```java
-class Calculator {
-
-    // Phương thức tĩnh
-    public static int add(int a, int b) {
-        return a + b;
-    }
-
-    // Phương thức thông thường
-    public int multiply(int a, int b) {
-        return a * b;
-    }
-}
-
-public class Main {
-    public static void main(String[] args) {
-        // Gọi phương thức tĩnh mà không cần đối tượng
-        int sum = Calculator.add(5, 10);
-        System.out.println("Sum: " + sum); // Output: 15
-
-        // Gọi phương thức thông thường cần khởi tạo đối tượng
-        Calculator calc = new Calculator();
-        int product = calc.multiply(5, 10);
-        System.out.println("Product: " + product); // Output: 50
-    }
-}
-```
-
-**Giải thích**:
-- Phương thức tĩnh `add()` có thể được gọi trực tiếp bằng tên lớp `Calculator`, không cần tạo đối tượng.
-- Trong khi đó, phương thức non-static `multiply()` yêu cầu tạo một đối tượng của lớp `Calculator` trước khi gọi.
-
----
-
-## **3. Phân biệt Phương thức tĩnh và Phương thức thông thường**
-
-| **Đặc điểm**                   | **Phương thức tĩnh (Static Method)**                                       | **Phương thức thông thường (Non-Static Method)**               |
-|---------------------------------|---------------------------------------------------------------------------|----------------------------------------------------------------|
-| **Thuộc về**                   | Thuộc về **lớp**.                                                        | Thuộc về **đối tượng**.                                          |
-| **Cách gọi**                   | Có thể gọi **trực tiếp** bằng tên lớp (không cần tạo đối tượng).           | Chỉ có thể gọi thông qua một **đối tượng** của lớp đó.          |
-| **Truy cập biến**              | Chỉ có thể truy cập **biến tĩnh (static)**.                                | Có thể truy cập cả **biến tĩnh** và **biến thông thường**.       |
-| **Truy cập phương thức khác**  | Chỉ có thể gọi **phương thức tĩnh (static)** khác.                        | Có thể gọi cả **phương thức tĩnh** và **phương thức thông thường**. |
-| **Ví dụ sử dụng**              | Sử dụng cho các tác vụ **chung** như: xử lý toán học, tiện ích, logging.    | Dùng cho các tác vụ liên quan đến **dữ liệu cụ thể** của đối tượng. |
-| **Sử dụng từ khóa `this`**     | **Không thể** sử dụng từ khóa `this` hoặc `super`.                         | Có thể sử dụng `this` hoặc `super`.                             |
-
----
-
-### **4. Ví dụ so sánh**
-```java
-class Example {
-
-    // Biến tĩnh
-    static int staticVariable = 10;
-
-    // Biến thông thường
-    int nonStaticVariable = 20;
-
-    // Phương thức tĩnh
-    public static void staticMethod() {
-        System.out.println("This is a static method.");
-
-        // Có thể truy cập biến tĩnh
-        System.out.println("Static Variable: " + staticVariable);
-
-        // Không thể truy cập biến thông thường trực tiếp
-        // System.out.println("Non-Static Variable: " + nonStaticVariable); // ERROR
-
-        // Không thể gọi phương thức thường
-        // nonStaticMethod(); // ERROR
-    }
-
-    // Phương thức thông thường
-    public void nonStaticMethod() {
-        System.out.println("This is a non-static method.");
-
-        // Có thể truy cập cả biến tĩnh và thông thường
-        System.out.println("Static Variable: " + staticVariable);
-        System.out.println("Non-Static Variable: " + nonStaticVariable);
-
-        // Có thể gọi phương thức tĩnh
-        staticMethod();
-    }
-}
-
-public class Main {
-    public static void main(String[] args) {
-        // Gọi phương thức tĩnh qua tên lớp
-        Example.staticMethod();
-
-        // Gọi phương thức thông thường yêu cầu tạo đối tượng
-        Example example = new Example();
-        example.nonStaticMethod();
+        System.out.println("Số đối tượng được tạo: " + StaticVariableExample.count);
     }
 }
 ```
 
 **Kết quả:**
 ```
-This is a static method.
-Static Variable: 10
-This is a non-static method.
-Static Variable: 10
-Non-Static Variable: 20
-This is a static method.
-Static Variable: 10
+Số đối tượng được tạo: 2
 ```
-
-**Giải thích**:
-1. **Phương thức tĩnh (`staticMethod`)**:
-   - Được gọi trực tiếp bằng tên lớp `Example.staticMethod()`.
-   - Có thể truy cập biến tĩnh nhưng không thể truy cập biến thông thường hoặc các phương thức thông thường.
-
-2. **Phương thức thông thường (`nonStaticMethod`)**:
-   - Cần tạo đối tượng `Example` để gọi.
-   - Có thể truy cập cả biến tĩnh, biến thông thường, và gọi các phương thức (tĩnh hoặc thông thường).
 
 ---
 
-### **5. Ứng dụng của Biến và Phương thức Tĩnh**
+### **2.2. Phương thức static (Static Methods)**
 
-#### **Biến tĩnh - Ứng dụng:**
-- Lưu các giá trị **toàn cục** hoặc **chung** cho tất cả các đối tượng, như bộ đếm (`counter`), danh sách cấu hình, thông tin thống kê...
+#### **Đặc điểm:**
+- Phương thức static có thể được gọi trực tiếp bằng tên lớp mà **không cần tạo đối tượng**.
+- Không thể truy cập **non-static variables** hoặc **non-static methods** trực tiếp trong phương thức static vì chúng yêu cầu instance.
+- Chủ yếu được dùng để thực hiện các thao tác mà không phụ thuộc vào instance (ví dụ: các hàm tiện ích, toán học).
 
-#### **Phương thức tĩnh - Ứng dụng:**
-- Dùng cho các thao tác **chung** như các hàm tiện ích (ví dụ `Math.sqrt()`), hoặc hàm không liên quan tới trạng thái cụ thể của đối tượng.
-- Dùng để xử lý **cấu hình chung** hoặc các phương thức tương tác ở cấp lớp (Class-Level).
+#### **Cách sử dụng:**
+- Sử dụng trực tiếp qua tên lớp (`ClassName.methodName()`).
+
+#### **Ví dụ:**
+```java
+public class StaticMethodExample {
+    static int square(int x) { // Phương thức static để tính bình phương
+        return x * x;
+    }
+
+    public static void main(String[] args) {
+        // Gọi phương thức static qua tên lớp
+        System.out.println("Bình phương của 4: " + StaticMethodExample.square(4));
+    }
+}
+```
+
+**Kết quả:**
+```
+Bình phương của 4: 16
+```
+
+---
+
+### **2.3. Khối mã static (Static Block)**
+
+#### **Đặc điểm:**
+- Khối static là một đoạn mã được khai báo với từ khóa `static`.
+- Nó được thực thi **một lần duy nhất** khi lớp được tải vào bộ nhớ bởi JVM.
+- Chủ yếu được dùng để khởi tạo dữ liệu hoặc thực hiện các thao tác trước khi lớp được sử dụng.
+
+#### **Cách sử dụng:**
+- Dùng để **khởi tạo biến static** hoặc thực hiện các thao tác khởi động chung.
+
+#### **Ví dụ:**
+```java
+public class StaticBlockExample {
+    static String databaseUrl;
+
+    // Khối static để khởi tạo
+    static {
+        databaseUrl = "jdbc:mysql://localhost:3306/mydb";
+        System.out.println("Khối static được thực thi.");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("URL cơ sở dữ liệu: " + databaseUrl);
+    }
+}
+```
+
+**Kết quả:**
+```
+Khối static được thực thi.
+URL cơ sở dữ liệu: jdbc:mysql://localhost:3306/mydb
+```
+
+---
+
+### **2.4. Lớp lồng nhau static (Static Nested Class)**
+
+#### **Đặc điểm:**
+- Lớp lồng nhau **static** là một lớp có thể được khai báo bên trong một lớp khác và không phụ thuộc vào instance của lớp cha.
+- Lớp này có thể truy cập trực tiếp các thành phần static của lớp cha (nhưng không phải non-static).
+
+#### **Cách sử dụng:**
+- Lớp lồng này được tham chiếu thông qua tên lớp cha (`OuterClass.StaticNestedClass`).
+
+#### **Ví dụ:**
+```java
+public class OuterClass {
+    static String outerStaticField = "Hello from OuterClass!";
+
+    // Lớp lồng nhau static
+    static class NestedStaticClass {
+        void displayMessage() {
+            System.out.println(outerStaticField); // Truy cập biến static từ lớp cha
+        }
+    }
+
+    public static void main(String[] args) {
+        // Tạo đối tượng của lớp lồng nhau static
+        OuterClass.NestedStaticClass nestedObj = new OuterClass.NestedStaticClass();
+        nestedObj.displayMessage();
+    }
+}
+```
+
+**Kết quả:**
+```
+Hello from OuterClass!
+```
+
+---
+
+## **3. Tóm Tắt `static` trong Java**
+
+| **Loại static**          | **Miêu tả**                                                                                       | **Truy cập**                                                                                      |
+|---------------------------|---------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| **Biến static**           | Thông tin dùng chung lưu trữ tại cấp lớp, được chia sẻ giữa tất cả các đối tượng.                | `ClassName.variableName` (khuyến khích) hoặc `objectName.variableName` (không khuyến khích).      |
+| **Phương thức static**    | Phương thức cấp lớp, hoạt động mà không cần instance (thường dùng cho hàm tiện ích).              | `ClassName.methodName()`.                                                                        |
+| **Khối static**           | Khối mã tự động thực thi khi lớp được tải. Dùng để khởi tạo biến static hoặc thực hiện cấu hình. | Tự động thực thi khi lớp được nạp vào JVM.                                                      |
+| **Lớp lồng nhau static**  | Lớp bên trong không phụ thuộc vào instance của lớp cha.                                          | `OuterClass.StaticNestedClass nestedObj = new OuterClass.StaticNestedClass();`.                  |
+
+---
+
+## **4. Lưu Ý Khi Sử Dụng `static`**
+- **Sử dụng hợp lý:** `static` tiết kiệm bộ nhớ nhưng có thể dẫn đến tính thiếu linh hoạt (flexibility) nếu sử dụng quá nhiều.
+- **Không thể ghi đè (override) phương thức static:** Phương thức static không thể bị ghi đè vì chúng thuộc về lớp, không thuộc về đối tượng.
+- **Không thể tham chiếu đến thành phần non-static:** Trong một phương thức static, bạn không thể gọi hoặc tham chiếu trực tiếp các thành phần không static.
+
+### **Ví dụ Sai Sót:**
+```java
+public class StaticLimitations {
+    int nonStaticField = 10;
+
+    static void staticMethod() {
+        // Lỗi: Không thể tham chiếu đến biến non-static
+        // System.out.println(nonStaticField); 
+    }
+}
+```
+
+---
+
+**Kết Luận:**
+Static là một công cụ mạnh mẽ trong Java giúp quản lý dữ liệu dùng chung, giảm thiểu chi phí bộ nhớ và hỗ trợ thực hiện các hàm tiện ích. Tuy nhiên, cần sử dụng cẩn thận để tránh làm mất tính linh hoạt và gây khó khăn trong bảo trì mã nguồn.
 
 ---
 # English:
 
-# **Static Variables and Static Methods**
+# **Static in Java - Types and Characteristics**
 
-## **1. What is a Static Variable?**
-- A **static variable** is a variable declared with the keyword **`static`** in a class.
-- The value of a static variable is **shared among all objects** of that class. It is independent of individual objects and is stored in the **static memory** (not in the heap memory of each object).
-- A static variable belongs to the **class** (Class-Level) rather than to objects (Object-Level).
-
-### **Characteristics of Static Variables**:
-1. There is only a **single copy** of the static variable in the program's memory, which is shared across all instances of a class.
-2. Static variables are initialized when the class is loaded into memory and are destroyed when the program ends.
-3. They can be accessed directly using the **class name** (no need to create an object).
+In Java, the `static` keyword is used to declare **class-level members** that belong to the class itself rather than to any specific instance of the class. Static is used to save memory and allow shared use of data or methods across all objects of the class.
 
 ---
 
-### **Example 1: Static Variables**
+## **1. Types of `static` in Java**
+
+Java supports four types of `static` components:
+
+| **Type of Static**       | **Purpose**                                                                |
+|--------------------------|----------------------------------------------------------------------------|
+| **Static Variable**       | Stores shared information among all objects of the class.                 |
+| **Static Method**         | Used to perform common operations or for calling without creating objects. |
+| **Static Block**          | A block of code executed only once when the class is loaded into JVM.      |
+| **Static Nested Class**   | A nested class that does not depend on the instance of the outer (parent) class. |
+
+---
+
+## **2. Characteristics of Each Type of `static`**
+
+### **2.1. Static Variables**
+
+#### **Characteristics:**
+- A `static` variable is a **class-level variable** that is shared across all objects of the class.
+- It stores common information shared among every instance of the class, instead of creating separate copies for each object.
+- A static variable is initialized only once when the class is loaded into memory.
+
+#### **Usage:**
+- It can be accessed using:
+  - The class name (`ClassName.variableName`).
+  - Or through an instance of the class (not recommended).
+
+#### **Example:**
 ```java
-class Counter {
-    static int count = 0; // Static variable
+public class StaticVariableExample {
+    static int count = 0; // Static variable shared by all objects
 
-    Counter() {
-        count++; // Increment the static variable each time an object is created
-        System.out.println("Count: " + count);
+    StaticVariableExample() {
+        count++; // Increment count each time an object is created
     }
-}
 
-public class Main {
     public static void main(String[] args) {
-        Counter c1 = new Counter(); // Count: 1
-        Counter c2 = new Counter(); // Count: 2
-        Counter c3 = new Counter(); // Count: 3
+        StaticVariableExample obj1 = new StaticVariableExample();
+        StaticVariableExample obj2 = new StaticVariableExample();
 
-        // Access static variable via the class name
-        System.out.println("Final Count: " + Counter.count); // Output: 3
+        System.out.println("Number of objects created: " + StaticVariableExample.count);
     }
 }
 ```
 
-**Explanation**:
-- The static variable `count` is shared among all objects of the `Counter` class.
-- Every time a `Counter` object is created, the value of `count` increases by 1.
+**Output:**
+```
+Number of objects created: 2
+```
 
 ---
 
-## **2. What is a Static Method?**
+### **2.2. Static Methods**
 
-A **static method** is a method declared with the keyword **`static`**. This method belongs to the **class** instead of individual objects. This means the method can be called **without creating an instance** of the class.
+#### **Characteristics:**
+- A static method can be called directly using the class name **without creating an object**.
+- It cannot access **non-static variables** or call **non-static methods** directly because they require an instance.
+- Primarily used for operations that do not depend on instance data (e.g., utility or mathematical functions).
 
-### **Characteristics of Static Methods**:
-1. Static methods can be called directly using the **class name**, without creating an object.
-2. Static methods can only access:
-   - **Static variables**.
-   - Other **static methods**.
-3. **Cannot** access or modify non-static variables or methods of a class.
-4. They are typically used to perform common operations that do not require object state.
+#### **Usage:**
+- Called directly via the class name (`ClassName.methodName()`).
 
----
-
-### **Example 2: Static Methods**
+#### **Example:**
 ```java
-class Calculator {
-
-    // Static Method
-    public static int add(int a, int b) {
-        return a + b;
+public class StaticMethodExample {
+    static int square(int x) { // Static method to calculate square
+        return x * x;
     }
 
-    // Regular (Non-Static) Method
-    public int multiply(int a, int b) {
-        return a * b;
-    }
-}
-
-public class Main {
     public static void main(String[] args) {
-        // Call static method without creating an object
-        int sum = Calculator.add(5, 10);
-        System.out.println("Sum: " + sum); // Output: 15
-
-        // Call a non-static method, requires object instantiation
-        Calculator calc = new Calculator();
-        int product = calc.multiply(5, 10);
-        System.out.println("Product: " + product); // Output: 50
+        // Call the static method using the class name
+        System.out.println("Square of 4: " + StaticMethodExample.square(4));
     }
 }
 ```
 
-**Explanation**:
-- The static method `add()` can be called directly using the class name `Calculator`, without creating an object.
-- On the other hand, the non-static method `multiply()` requires the creation of an instance of the `Calculator` class to be called.
+**Output:**
+```
+Square of 4: 16
+```
 
 ---
 
-## **3. Comparison Between Static Methods and Regular Methods**
+### **2.3. Static Block**
 
-| **Aspect**                  | **Static Method**                                                         | **Regular (Non-Static) Method**                                 |
-|-----------------------------|---------------------------------------------------------------------------|----------------------------------------------------------------|
-| **Belongs To**              | Belongs to the **class**.                                                 | Belongs to the **object**.                                      |
-| **How to Call**             | Can be called **directly** using the class name (no need to create an object). | Must be called using an **object** of the class.              |
-| **Accessing Variables**     | Can only access **static variables**.                                      | Can access both **static variables** and **non-static variables**. |
-| **Accessing Other Methods** | Can only call **static methods**.                                          | Can call both **static methods** and **non-static methods**.    |
-| **Use of `this` or `super`**| **Cannot** use `this` or `super`.                                          | Can use `this` or `super`.                                      |
-| **Use Case**                | Commonly used for **shared operations**, like mathematical calculations or utility methods. | Used for operations that depend on the specific object state. |
+#### **Characteristics:**
+- A static block is a section of code declared with the `static` keyword.
+- It executes **only once** when the class is loaded into memory by the JVM.
+- Primarily used for initializing static variables or performing setup tasks before the class is used.
 
----
+#### **Usage:**
+- Used to initialize static variables or perform shared configurations.
 
-### **4. Example Highlighting Static and Non-Static Methods**
+#### **Example:**
 ```java
-class Example {
+public class StaticBlockExample {
+    static String databaseUrl;
 
-    // Static Variable
-    static int staticVariable = 10;
-
-    // Non-Static Variable
-    int nonStaticVariable = 20;
-
-    // Static Method
-    public static void staticMethod() {
-        System.out.println("This is a static method.");
-
-        // Can access static variables
-        System.out.println("Static Variable: " + staticVariable);
-
-        // Cannot access non-static variables directly
-        // System.out.println("Non-Static Variable: " + nonStaticVariable); // ERROR
-
-        // Cannot call non-static methods
-        // nonStaticMethod(); // ERROR
+    // Static block for initialization
+    static {
+        databaseUrl = "jdbc:mysql://localhost:3306/mydb";
+        System.out.println("Static block executed.");
     }
 
-    // Non-Static Method
-    public void nonStaticMethod() {
-        System.out.println("This is a non-static method.");
-
-        // Can access both static and non-static variables
-        System.out.println("Static Variable: " + staticVariable);
-        System.out.println("Non-Static Variable: " + nonStaticVariable);
-
-        // Can call a static method
-        staticMethod();
-    }
-}
-
-public class Main {
     public static void main(String[] args) {
-        // Static method is called using the class name
-        Example.staticMethod();
-
-        // Non-static method requires an object to call
-        Example example = new Example();
-        example.nonStaticMethod();
+        System.out.println("Database URL: " + databaseUrl);
     }
 }
 ```
 
-**Output**:
+**Output:**
 ```
-This is a static method.
-Static Variable: 10
-This is a non-static method.
-Static Variable: 10
-Non-Static Variable: 20
-This is a static method.
-Static Variable: 10
+Static block executed.
+Database URL: jdbc:mysql://localhost:3306/mydb
 ```
-
-**Explanation**:
-1. **Static Method (`staticMethod`)**:
-   - Called using the class name `Example.staticMethod()`.
-   - Can only access static variables and static methods.
-2. **Non-Static Method (`nonStaticMethod`)**:
-   - Requires an object (`example`) to be called.
-   - Can access both static and non-static variables, and can call both static and non-static methods.
 
 ---
 
-### **5. Applications of Static Variables and Methods**
+### **2.4. Static Nested Class**
 
-#### **Static Variables - Applications**:
-- Used to store **global information or data** shared by all objects. Examples:
-  - Counter in a class (`counter`).
-  - Configuration settings.
-  - Shared statistics or reference data.
+#### **Characteristics:**
+- A **static nested class** is a class declared inside another class but marked as `static`. It does not rely on the instance of its outer class.
+- A static nested class can directly access the static members of its outer class (but not non-static members).
 
-#### **Static Methods - Applications**:
-- Used for **common utility functions** or operations that are not dependent on specific object states:
-  - Mathematical operations (e.g., `Math.sqrt()`).
-  - Logging.
-  - General-purpose methods like validation, formatting, or conversions.
+#### **Usage:**
+- It can be referenced using the outer class name (`OuterClass.StaticNestedClass`).
 
---- 
+#### **Example:**
+```java
+public class OuterClass {
+    static String outerStaticField = "Hello from OuterClass!";
 
-In conclusion, **static variables** and **static methods** are essential when working with shared data or common operations, while **non-static methods** are used for tasks specific to individual objects. Understanding these concepts helps developers create efficient and maintainable code.
+    // Static nested class
+    static class NestedStaticClass {
+        void displayMessage() {
+            System.out.println(outerStaticField); // Accessing static variable of the outer class
+        }
+    }
+
+    public static void main(String[] args) {
+        // Creating an instance of the static nested class
+        OuterClass.NestedStaticClass nestedObj = new OuterClass.NestedStaticClass();
+        nestedObj.displayMessage();
+    }
+}
+```
+
+**Output:**
+```
+Hello from OuterClass!
+```
+
+---
+
+## **3. Summary of `static` in Java**
+
+| **Type of static**      | **Description**                                                                             | **Access**                                                                                     |
+|--------------------------|--------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| **Static Variable**      | Stores shared information at the class level, shared across all objects.                   | `ClassName.variableName` (recommended) or `objectName.variableName` (not recommended).        |
+| **Static Method**        | Performs class-level operations and is callable without an instance (utility functions).    | `ClassName.methodName()`.                                                                     |
+| **Static Block**         | Automatically executed when the class is loaded into JVM; used for initialization tasks.    | Executes automatically at class loading time.                                                |
+| **Static Nested Class**  | A nested class independent of the outer (parent) class instance.                            | `OuterClass.StaticNestedClass nestedObj = new OuterClass.StaticNestedClass();`.               |
+
+---
+
+## **4. Important Notes on `static`**
+
+- **Use `static` wisely:** Although `static` saves memory, it can reduce flexibility if used excessively.
+- **Cannot override static methods:** Static methods cannot be overridden because they pertain to the class and not the object.
+- **Static methods cannot reference non-static members directly:** This limitation ensures that static methods do not rely on the instance state.
+
+### **Example of Misuse:**
+```java
+public class StaticLimitations {
+    int nonStaticField = 10;
+
+    static void staticMethod() {
+        // Error: Cannot reference non-static field from a static context
+        // System.out.println(nonStaticField); 
+    }
+}
+```
+
+---
+
+**Conclusion:**
+The `static` keyword is a powerful tool in Java that helps manage shared data, reduce memory overhead, and create utility functions. However, it must be used cautiously to avoid compromising flexibility and maintainability of the code.
